@@ -161,7 +161,7 @@ function addEmployee() {
         name: 'managerid',
         type: 'list',
         message: 'Select manager id',
-        choices: ['1', '3', '5', '8', '10'],
+        choices: ['1', '3', '5', '8', '10', '12'],
       },
     ])
     .then(function (answer) {
@@ -184,7 +184,7 @@ function addEmployee() {
 }
 
 function viewEmployees() {
-  query = `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title, department.name AS "Department", role.salary AS "Salary",
+  query = `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title, department.name AS "Department", role.salary AS "Salary"
   FROM employee 
   LEFT JOIN role 
   ON role.id = employee.role_id 
@@ -206,7 +206,11 @@ function viewByDept() {
         name: 'department',
         type: 'list',
         message: 'Select department to view',
-        choices: ['Sales', 'Accounting', 'IT', 'Marketing', 'Executive'],
+        choices: [
+          connection.query('SELECT * FROM department', function (err, res) {
+            if (err) throw err;
+          }),
+        ],
       })
       .then(function (answer) {
         query = `SELECT employee.id, employee.first_name AS "First Name", employee.last_name AS "Last Name", role.title, department.name AS "Department", role.salary AS "Salary"
